@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6f59278e8eb09c835bfe0cbfbbfa869e5a71d51724c6ba570fa2a50a8b45e660
+-- hash: d16e13f79850a25fa1b9d9a0aeae86bfbf14a19692661f5204557e5af67a68ca
 
 name:           booking-rockets-spacex
 version:        0.1.0.0
@@ -27,13 +27,19 @@ source-repository head
 
 library
   exposed-modules:
+      API.Graphql
       Lib
+      Server.Scotty
   other-modules:
       Paths_booking_rockets_spacex
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , morpheus-graphql
+    , scotty
+    , text
   default-language: Haskell2010
 
 executable booking-rockets-spacex-exe
@@ -46,6 +52,10 @@ executable booking-rockets-spacex-exe
   build-depends:
       base >=4.7 && <5
     , booking-rockets-spacex
+    , bytestring
+    , morpheus-graphql
+    , scotty
+    , text
   default-language: Haskell2010
 
 test-suite booking-rockets-spacex-test
@@ -59,4 +69,8 @@ test-suite booking-rockets-spacex-test
   build-depends:
       base >=4.7 && <5
     , booking-rockets-spacex
+    , bytestring
+    , morpheus-graphql
+    , scotty
+    , text
   default-language: Haskell2010

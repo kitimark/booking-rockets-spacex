@@ -1,6 +1,6 @@
 module Main where
 
-import Lib
+import Server.Scotty
 
 main :: IO ()
-main = someFunc
+main = api
