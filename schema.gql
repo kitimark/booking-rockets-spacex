@@ -1,3 +1,16 @@
+type Rocket {
+  rocketId: String!
+  rocketName: String!
+  rocketType: String!
+}
+
+type Flight {
+  flightNumber: Int!
+  missionName: String!
+  rocket: Rocket!
+}
+
 type Query {
   hello: String!
+  getLatestFlight: Flight!
 }
