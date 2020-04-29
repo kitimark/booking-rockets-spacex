@@ -31,16 +31,22 @@ library
       Database.Sqlite
       Lib
       Server.Scotty
+      Spacex.Flight
   other-modules:
       Paths_booking_rockets_spacex
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
+    , http-client
+    , http-client-tls
     , morpheus-graphql
     , regex-posix
     , scotty
+    , servant
+    , servant-client
     , text
   default-language: Haskell2010
 
@@ -52,12 +58,17 @@ executable booking-rockets-spacex-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , booking-rockets-spacex
     , bytestring
+    , http-client
+    , http-client-tls
     , morpheus-graphql
     , regex-posix
     , scotty
+    , servant
+    , servant-client
     , text
   default-language: Haskell2010
 
@@ -70,11 +81,16 @@ test-suite booking-rockets-spacex-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , booking-rockets-spacex
     , bytestring
+    , http-client
+    , http-client-tls
     , morpheus-graphql
     , regex-posix
     , scotty
+    , servant
+    , servant-client
     , text
   default-language: Haskell2010
