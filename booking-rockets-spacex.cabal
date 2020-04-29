@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0f265c8fd20d7bcec3f63ad1c2355c5266eca398cbab3245bbd555762cf7ac9f
+-- hash: 58322a97649db43b8a8354aa2093e4287dfdcc7cd3d15ff8dce81c667240431a
 
 name:           booking-rockets-spacex
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       API.Graphql
+      Database.Sqlite
       Lib
       Server.Scotty
       Spacex.Rocket
@@ -42,6 +43,7 @@ library
     , http-client
     , http-client-tls
     , morpheus-graphql
+    , regex-posix
     , scotty
     , servant
     , servant-client
@@ -63,6 +65,7 @@ executable booking-rockets-spacex-exe
     , http-client
     , http-client-tls
     , morpheus-graphql
+    , regex-posix
     , scotty
     , servant
     , servant-client
@@ -85,6 +88,7 @@ test-suite booking-rockets-spacex-test
     , http-client
     , http-client-tls
     , morpheus-graphql
+    , regex-posix
     , scotty
     , servant
     , servant-client
