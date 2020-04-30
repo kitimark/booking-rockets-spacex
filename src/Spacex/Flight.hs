@@ -1,6 +1,8 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
@@ -78,3 +80,22 @@ getFlights = do
 
 resolveGetFlights :: IORes e [Flight]
 resolveGetFlights = liftIO getFlights
+
+type FlightAPI = "launches" :> Capture "id" Int :> Get '[JSON] Flight
+
+flightAPI :: Proxy FlightAPI
+flightAPI = Proxy
+
+getFlight :: Int -> IO Flight
+getFlight id = do
+  manager' <- newManager tlsManagerSettings
+  Right res <- runClientM client' (mkClientEnv manager' baseUrl')
+  return res
+    where client' = client flightAPI id
+
+data FlightArgs = FlightArgs
+  { flightNumber :: Int
+  } deriving (Generic)
+
+resolveGetFlight :: FlightArgs -> IORes e Flight
+resolveGetFlight FlightArgs { flightNumber } = liftIO $ getFlight flightNumber

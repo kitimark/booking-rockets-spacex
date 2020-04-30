@@ -24,6 +24,7 @@ data Query m = Query
   { hello :: m Text
   , getLatestFlight :: m Flight
   , getFlights :: m [Flight]
+  , getFlight :: FlightArgs -> m Flight
   } deriving (Generic, GQLType)
 
 rootResolver :: GQLRootResolver IO () Query Undefined Undefined
@@ -32,7 +33,8 @@ rootResolver =
     { queryResolver = Query 
       { hello
       , getLatestFlight = resolveGetLatestFlight
-      , getFlights = resolveGetFlights }
+      , getFlights = resolveGetFlights 
+      , getFlight = resolveGetFlight }
     , mutationResolver = undefined
     , subscriptionResolver = undefined }
   where
