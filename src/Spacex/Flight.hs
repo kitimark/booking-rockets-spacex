@@ -62,3 +62,17 @@ getLatestFlight = do
 
 resolveGetLatestFlight :: IORes e Flight
 resolveGetLatestFlight = liftIO getLatestFlight
+
+type FlightsAPI = "launches" :> Get '[JSON] [Flight]
+
+flightsAPI :: Proxy FlightsAPI
+flightsAPI = Proxy
+
+getFlights :: IO [Flight]
+getFlights = do
+  manager' <- newManager tlsManagerSettings
+  Right res <- runClientM (client flightsAPI) (mkClientEnv manager' baseUrl')
+  return res
+
+resolveGetFlights :: IORes e [Flight]
+resolveGetFlights = liftIO getFlights

@@ -23,12 +23,16 @@ import Spacex.Flight
 data Query m = Query
   { hello :: m Text
   , getLatestFlight :: m Flight
+  , getFlights :: m [Flight]
   } deriving (Generic, GQLType)
 
 rootResolver :: GQLRootResolver IO () Query Undefined Undefined
 rootResolver = 
   GQLRootResolver
-    { queryResolver = Query {hello, getLatestFlight = resolveGetLatestFlight}
+    { queryResolver = Query 
+      { hello
+      , getLatestFlight = resolveGetLatestFlight
+      , getFlights = resolveGetFlights }
     , mutationResolver = undefined
     , subscriptionResolver = undefined }
   where
