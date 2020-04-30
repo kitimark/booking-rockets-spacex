@@ -57,8 +57,9 @@ latestFlightAPI = Proxy
 getLatestFlight :: IO Flight
 getLatestFlight = do
   manager' <- newManager tlsManagerSettings
-  Right res <- runClientM (client latestFlightAPI) (mkClientEnv manager' baseUrl') 
+  Right res <- runClientM client' (mkClientEnv manager' baseUrl') 
   return res
+    where client' = client latestFlightAPI
 
 resolveGetLatestFlight :: IORes e Flight
 resolveGetLatestFlight = liftIO getLatestFlight
@@ -71,8 +72,9 @@ flightsAPI = Proxy
 getFlights :: IO [Flight]
 getFlights = do
   manager' <- newManager tlsManagerSettings
-  Right res <- runClientM (client flightsAPI) (mkClientEnv manager' baseUrl')
+  Right res <- runClientM client' (mkClientEnv manager' baseUrl')
   return res
+    where client' = client flightsAPI
 
 resolveGetFlights :: IORes e [Flight]
 resolveGetFlights = liftIO getFlights
