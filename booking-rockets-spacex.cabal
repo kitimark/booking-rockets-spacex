@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 63e2546c5bfb2c92d448cc0384838455dcbae849049d5f47b111b4de73a9354c
+-- hash: 432026ceda2437ca5ea06aeca494fc03563dbcd8c9d3ed79ce009e85e5ead8c8
 
 name:           booking-rockets-spacex
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       API.Graphql
+      Database.SQLCode
       Database.Sqlite
       Lib
       Server.Scotty
@@ -40,7 +41,10 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bcrypt
     , bytestring
+    , direct-sqlite
+    , directory
     , http-client
     , http-client-tls
     , morpheus-graphql
@@ -48,6 +52,7 @@ library
     , scotty
     , servant
     , servant-client
+    , sqlite-simple
     , text
   default-language: Haskell2010
 
@@ -61,8 +66,11 @@ executable booking-rockets-spacex-exe
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bcrypt
     , booking-rockets-spacex
     , bytestring
+    , direct-sqlite
+    , directory
     , http-client
     , http-client-tls
     , morpheus-graphql
@@ -70,6 +78,7 @@ executable booking-rockets-spacex-exe
     , scotty
     , servant
     , servant-client
+    , sqlite-simple
     , text
   default-language: Haskell2010
 
@@ -84,8 +93,11 @@ test-suite booking-rockets-spacex-test
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bcrypt
     , booking-rockets-spacex
     , bytestring
+    , direct-sqlite
+    , directory
     , http-client
     , http-client-tls
     , morpheus-graphql
@@ -93,5 +105,6 @@ test-suite booking-rockets-spacex-test
     , scotty
     , servant
     , servant-client
+    , sqlite-simple
     , text
   default-language: Haskell2010

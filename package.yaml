@@ -21,7 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- aeson
+- direct-sqlite
 - bytestring
 - morpheus-graphql
 - http-client
@@ -29,14 +29,12 @@ dependencies:
 - scotty
 - servant
 - servant-client
-- text
 - aeson
 - text
-- servant
-- servant-client
-- http-client
-- http-client-tls
 - regex-posix
+- sqlite-simple
+- directory
+- bcrypt
 
 library:
   source-dirs: src
