@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -7,38 +8,39 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 
 module API.Graphql where
 
+import Control.Monad.IO.Class
 import Data.ByteString.Lazy.Char8
 import Data.Text
 import Data.Morpheus
 import Data.Morpheus.Document
 import Data.Morpheus.Types
-import Control.Monad.IO.Class (liftIO)
-import qualified Spacex.Rocket as R
+import GHC.Generics
+import Spacex.Flight
 
-importGQLDocument "schema.gql"
+data Query m = Query
+  { hello :: m Text
+  , getLatestFlight :: m Flight
+  , getFlights :: m [Flight]
+  , getFlight :: FlightArgs -> m Flight
+  } deriving (Generic, GQLType)
 
 rootResolver :: GQLRootResolver IO () Query Undefined Undefined
 rootResolver = 
   GQLRootResolver
-    { queryResolver = Query {hello, getLatestFlight}
+    { queryResolver = Query 
+      { hello
+      , getLatestFlight = resolveGetLatestFlight
+      , getFlights = resolveGetFlights 
+      , getFlight = resolveGetFlight }
     , mutationResolver = undefined
     , subscriptionResolver = undefined }
   where
     hello = pure "Hello world"
-    getLatestFlight = liftIO $ do 
-      flight' <- R.getLatestFlight
-      let rocketRes = (R.rocket flight')
-      let rocket' = pure Rocket { 
-        rocketId = pure (R.rocketId rocketRes),
-        rocketName = pure (R.rocketName rocketRes),
-        rocketType = pure (R.rocketType rocketRes) }
-      pure Flight 
-        { flightNumber = pure (R.flightNumber flight')
-        , missionName = pure (R.missionName flight')
-        , rocket = rocket' }
 
 gqlAPI :: ByteString -> IO ByteString
 gqlAPI = interpreter rootResolver
+  

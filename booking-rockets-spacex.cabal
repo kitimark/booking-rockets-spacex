@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 58322a97649db43b8a8354aa2093e4287dfdcc7cd3d15ff8dce81c667240431a
+-- hash: 63e2546c5bfb2c92d448cc0384838455dcbae849049d5f47b111b4de73a9354c
 
 name:           booking-rockets-spacex
 version:        0.1.0.0
@@ -31,6 +31,7 @@ library
       Database.Sqlite
       Lib
       Server.Scotty
+      Spacex.Flight
       Spacex.Rocket
   other-modules:
       Paths_booking_rockets_spacex
