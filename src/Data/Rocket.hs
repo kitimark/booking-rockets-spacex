@@ -4,7 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Spacex.Rocket where 
+module Data.Rocket where 
 
 import Data.Aeson
 import Data.Proxy

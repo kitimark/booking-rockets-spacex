@@ -19,7 +19,7 @@ import Data.Morpheus
 import Data.Morpheus.Document
 import Data.Morpheus.Types
 import GHC.Generics
-import Spacex.Flight
+import Data.Flight
 
 data Query m = Query
   { hello :: m Text

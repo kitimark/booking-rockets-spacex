@@ -35,6 +35,8 @@ dependencies:
 - sqlite-simple
 - directory
 - bcrypt
+- jwt
+- containers
 
 library:
   source-dirs: src

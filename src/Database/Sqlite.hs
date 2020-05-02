@@ -24,7 +24,7 @@ import Crypto.BCrypt
 import qualified Data.ByteString.Char8 as B
 
 data UserField = UserField
-    { id :: Int 
+    { userid :: Integer
     , username :: String
     , password ::String
     } deriving (Show)
@@ -33,9 +33,9 @@ instance FromRow UserField where
   fromRow = UserField <$> field <*> field <*> field
 
 data BookField = BookField     
-    { bookid :: Int 
-    , userID :: Int
-    , flightNumber :: Int
+    { bookid :: Integer
+    , userID :: Integer
+    , flightNumber :: Integer
     } deriving (Show)
 
 instance FromRow BookField where
@@ -143,13 +143,5 @@ queryBookings = do
     close conn
     return r
     
-login :: String -> String -> IO ()
-login user pass = do 
-    conn <- open "data.db"
-    [Only getque] <- liftIO $ query conn "select password from User where username = ?" (Only (user :: String)) :: IO [Only String]
-    close conn
-    if validatePassword (B.pack getque) (B.pack pass) 
-        then print "successs"
-        else print "fail"
     
 

@@ -6,7 +6,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Spacex.Flight where
+module Data.Flight where
 
 import Control.Monad.IO.Class
 import Data.Aeson

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 432026ceda2437ca5ea06aeca494fc03563dbcd8c9d3ed79ce009e85e5ead8c8
+-- hash: 22f2c2be1cb7a10467b7969095b60ea5e246209642bd56f631cd22274679e56f
 
 name:           booking-rockets-spacex
 version:        0.1.0.0
@@ -28,12 +28,12 @@ source-repository head
 library
   exposed-modules:
       API.Graphql
-      Database.SQLCode
+      Data.Flight
+      Data.Rocket
+      Data.User
       Database.Sqlite
       Lib
       Server.Scotty
-      Spacex.Flight
-      Spacex.Rocket
   other-modules:
       Paths_booking_rockets_spacex
   hs-source-dirs:
@@ -43,10 +43,12 @@ library
     , base >=4.7 && <5
     , bcrypt
     , bytestring
+    , containers
     , direct-sqlite
     , directory
     , http-client
     , http-client-tls
+    , jwt
     , morpheus-graphql
     , regex-posix
     , scotty
@@ -69,10 +71,12 @@ executable booking-rockets-spacex-exe
     , bcrypt
     , booking-rockets-spacex
     , bytestring
+    , containers
     , direct-sqlite
     , directory
     , http-client
     , http-client-tls
+    , jwt
     , morpheus-graphql
     , regex-posix
     , scotty
@@ -96,10 +100,12 @@ test-suite booking-rockets-spacex-test
     , bcrypt
     , booking-rockets-spacex
     , bytestring
+    , containers
     , direct-sqlite
     , directory
     , http-client
     , http-client-tls
+    , jwt
     , morpheus-graphql
     , regex-posix
     , scotty
