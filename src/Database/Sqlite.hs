@@ -43,11 +43,12 @@ instance FromRow BookField where
 
 -- instance FromField BookField where 
 --     fromField UserField = Ok UserField
-
+dropdb :: IO ()
 dropdb = do 
     removeFile "data.db"
     putStrLn "data.db has been removed"
 
+insertUser :: String -> String -> IO()
 insertUser name pass = do
     conn <- open "data.db" 
     let inq = "INSERT INTO User ( username, password) VALUES(?, ?);"
@@ -57,6 +58,7 @@ insertUser name pass = do
     putStrLn ("user id "++ show (id1) ++" has been added")
     close conn
 
+insertBooking :: Int -> Int -> IO()
 insertBooking userID flightNum = do
     conn <- open "data.db" 
     let inq = "INSERT INTO Booking ( userID, flightNumber) VALUES(?, ?);"
@@ -65,6 +67,7 @@ insertBooking userID flightNum = do
     putStrLn ("id " ++ show (id1) ++ " booked to " ++ show(flightNum))
     close conn
 
+initdb :: IO ()
 initdb = do
     conn <- open "data.db" 
     let code_user = "CREATE TABLE IF NOT EXISTS User(\
