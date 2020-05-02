@@ -27,19 +27,22 @@ data Query m = Query
   , getLatestFlight :: m Flight
   , getFlights :: m [Flight]
   , getFlight :: FlightArgs -> m Flight
-  , loginUser :: CredentialArgs -> m Text
   } deriving (Generic, GQLType)
 
-rootResolver :: GQLRootResolver IO () Query Undefined Undefined
+data Mutation m = Mutation
+  { loginUser :: CredentialArgs -> m Text 
+  } deriving (Generic, GQLType)
+
+rootResolver :: GQLRootResolver IO () Query Mutation Undefined
 rootResolver = 
   GQLRootResolver
     { queryResolver = Query 
       { hello
       , getLatestFlight = resolveGetLatestFlight
       , getFlights = resolveGetFlights 
-      , getFlight = resolveGetFlight 
-      , loginUser = resolveUserLogin }
-    , mutationResolver = undefined
+      , getFlight = resolveGetFlight }
+    , mutationResolver = Mutation 
+      { loginUser = resolveUserLogin }
     , subscriptionResolver = undefined }
   where
     hello = pure "Hello world"

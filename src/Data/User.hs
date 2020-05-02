@@ -60,7 +60,7 @@ data CredentialArgs = CredentialArgs
   , password :: T.Text 
   } deriving (Generic)
 
-resolveUserLogin :: CredentialArgs -> IORes e T.Text
+resolveUserLogin :: CredentialArgs -> IOMutRes e T.Text
 resolveUserLogin credential = do
   let user = T.unpack $ (username :: CredentialArgs -> T.Text) credential
   let pass = T.unpack $ (password :: CredentialArgs -> T.Text) credential
