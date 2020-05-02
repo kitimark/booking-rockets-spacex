@@ -20,12 +20,14 @@ import Data.Morpheus.Document
 import Data.Morpheus.Types
 import GHC.Generics
 import Data.Flight
+import Data.User
 
 data Query m = Query
   { hello :: m Text
   , getLatestFlight :: m Flight
   , getFlights :: m [Flight]
   , getFlight :: FlightArgs -> m Flight
+  , loginUser :: CredentialArgs -> m Text
   } deriving (Generic, GQLType)
 
 rootResolver :: GQLRootResolver IO () Query Undefined Undefined
@@ -35,7 +37,8 @@ rootResolver =
       { hello
       , getLatestFlight = resolveGetLatestFlight
       , getFlights = resolveGetFlights 
-      , getFlight = resolveGetFlight }
+      , getFlight = resolveGetFlight 
+      , loginUser = resolveUserLogin }
     , mutationResolver = undefined
     , subscriptionResolver = undefined }
   where
