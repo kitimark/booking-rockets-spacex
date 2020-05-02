@@ -41,6 +41,9 @@ data BookField = BookField
 instance FromRow BookField where
   fromRow = BookField <$> field <*> field <*> field
 
+-- instance FromField BookField where 
+--     fromField UserField = Ok UserField
+
 dropdb = do 
     removeFile "data.db"
     putStrLn "data.db has been removed"
@@ -78,12 +81,55 @@ initdb = do
     putStrLn "all table has been created"
     close conn
 
+
+-------------------------------------- function query from user table --------------------------------------
 queryUsers :: IO [UserField]
 queryUsers = do 
     conn <- open "data.db" 
     let sql_code = "select * from User" 
     r <- query_ conn sql_code:: IO [UserField]
     close conn 
+    return r
+
+queryUserByID :: Int -> IO UserField
+queryUserByID uid = do 
+    conn <- open "data.db" 
+    let sql_code = "select * from User where id = :qid" 
+    [r] <- queryNamed conn sql_code [":qid" := (uid :: Int)]:: IO [UserField]
+    close conn 
+    return r
+
+queryUserByUsername :: String -> IO UserField
+queryUserByUsername name = do 
+    conn <- open "data.db" 
+    let sql_code = "select * from User where username = :qid" 
+    [r] <- queryNamed conn sql_code [":qid" := (name :: String)]:: IO [UserField]
+    close conn 
+    return r
+
+-------------------------------------- query from booking table --------------------------------------
+queryBookingByID :: Int -> IO [BookField]
+queryBookingByID bookingId = do
+    conn <- open "data.db"
+    let sql_code = "select * from Booking where id = :qid"
+    r <- queryNamed conn sql_code [":qid" := (bookingId :: Int)]:: IO [BookField]
+    close conn
+    return r
+
+queryBookingByUserID :: Int -> IO [BookField]
+queryBookingByUserID userId = do
+    conn <- open "data.db"
+    let sql_code = "select * from Booking where userID = :qid"
+    r <- queryNamed conn sql_code [":qid" := (userId :: Int)]:: IO [BookField]
+    close conn
+    return r
+
+queryBookingByFlightID :: Int -> IO [BookField]
+queryBookingByFlightID flightId = do
+    conn <- open "data.db"
+    let sql_code = "select * from Booking where flightNumber = :qid"
+    r <- queryNamed conn sql_code [":qid" := (flightId :: Int)]:: IO [BookField]
+    close conn
     return r
 
 queryBookings :: IO [BookField]
@@ -93,7 +139,7 @@ queryBookings = do
     r <- query_ conn sql_code :: IO [BookField]
     close conn
     return r
-
+    
 login :: String -> String -> IO ()
 login user pass = do 
     conn <- open "data.db"
