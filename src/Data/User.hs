@@ -97,3 +97,15 @@ resolveCreateUser CreateUserArgs {username} = do
   user' <- liftIO $ queryUserByUsername username
   let user = userResolver user'
   return user
+
+data CreateBookingArgs = CreateBookingArgs
+  { userId :: Int
+  , flightNumber :: Int 
+  } deriving (Generic)
+
+resolveCreateBooking :: CreateBookingArgs -> IOMutRes e User
+resolveCreateBooking CreateBookingArgs {userId, flightNumber} = do
+  liftIO $ insertBooking userId flightNumber
+  user' <- liftIO $ queryUserByID userId
+  let user = userResolver user'
+  return user
