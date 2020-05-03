@@ -28,6 +28,7 @@ data Query m = Query
   , getFlights :: m [Flight]
   , getFlight :: FlightArgs -> m Flight
   , getUsers :: m [User]
+  , getUser :: GetUserArgs -> m User
   } deriving (Generic, GQLType)
 
 data Mutation m = Mutation
@@ -42,7 +43,8 @@ rootResolver =
       , getLatestFlight = resolveGetLatestFlight
       , getFlights = resolveGetFlights 
       , getFlight = resolveGetFlight 
-      , getUsers = resolveGetUsers }
+      , getUsers = resolveGetUsers 
+      , getUser = resolveGetUser }
     , mutationResolver = Mutation 
       { loginUser = resolveUserLogin }
     , subscriptionResolver = undefined }

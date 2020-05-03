@@ -82,6 +82,17 @@ resolveGetUsers = do
   let users' = map reduceUser users
   return users'
 
+data GetUserArgs = GetUserArgs
+  { userId :: Int
+  } deriving (Generic)
+
+resolveGetUser :: GetUserArgs -> IORes e User
+resolveGetUser GetUserArgs { userId } = do
+  user <- liftIO $ queryUserByID userId
+  let user' = reduceUser user
+  return user'
+
+
 reduceUser :: UserField -> User
 reduceUser UserField{userid, username, password} = User 
   { userId = userid
