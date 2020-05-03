@@ -21,6 +21,7 @@ import Data.Morpheus.Types
 import GHC.Generics
 import Data.Flight
 import Data.User
+import Data.Types
 
 data Query m = Query
   { hello :: m Text

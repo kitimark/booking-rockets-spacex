@@ -26,14 +26,23 @@ import Data.Types
 import Database.Spacex
 
 resolveGetLatestFlight :: IORes e Flight
-resolveGetLatestFlight = liftIO getLatestFlight
+resolveGetLatestFlight = do
+  flight' <- liftIO getLatestFlight
+  let flight = flightResolver flight'
+  return flight
 
 resolveGetFlights :: IORes e [Flight]
-resolveGetFlights = liftIO getFlights
+resolveGetFlights = do
+  flights' <- liftIO getFlights
+  let flights = map flightResolver flights'
+  return flights
 
 data FlightArgs = FlightArgs
   { flightNumber :: Int
   } deriving (Generic)
 
 resolveGetFlight :: FlightArgs -> IORes e Flight
-resolveGetFlight FlightArgs { flightNumber } = liftIO $ getFlight flightNumber
+resolveGetFlight FlightArgs { flightNumber } = do
+  flight' <- liftIO $ getFlight flightNumber
+  let flight = flightResolver flight'
+  return flight

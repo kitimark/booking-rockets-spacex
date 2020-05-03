@@ -23,8 +23,10 @@ import Data.Morpheus
 import Data.Morpheus.Document
 import Data.Morpheus.Types
 import GHC.Generics
+import Data.Types
 import Data.Flight
 import Foreign.Marshal.Unsafe
+import Database.Spacex
 
 logindb :: String -> String -> IO T.Text
 logindb user pass = do 
@@ -69,17 +71,10 @@ resolveUserLogin credential = do
   let pass = T.unpack $ (password :: CredentialArgs -> T.Text) credential
   liftIO $ logindb user pass
 
-data User = User
-  { userId :: Int
-  , username :: Text
-  , password :: Text
-  , bookings :: [Flight]
-  } deriving (Generic, GQLType)
-
 resolveGetUsers :: IORes e [User]
 resolveGetUsers = do
   users <- liftIO $ queryUsers
-  let users' = map reduceUser users
+  let users' = map userResolver users
   return users'
 
 data GetUserArgs = GetUserArgs
@@ -89,21 +84,5 @@ data GetUserArgs = GetUserArgs
 resolveGetUser :: GetUserArgs -> IORes e User
 resolveGetUser GetUserArgs { userId } = do
   user <- liftIO $ queryUserByID userId
-  let user' = reduceUser user
+  let user' = userResolver user
   return user'
-
-
-reduceUser :: UserField -> User
-reduceUser UserField{userid, username, password} = User 
-  { userId = userid
-  , username = username
-  , password = password 
-  , bookings = bookings'
-  } where 
-    bookings' = do
-      let bookingField = unsafeLocalState $ queryBookingByUserID userid
-      map reduceFlight bookingField
-
-reduceFlight :: BookField -> Flight
-reduceFlight BookField { flightNumber } = 
-  unsafeLocalState $ getFlight flightNumber 
