@@ -22,21 +22,23 @@ import Database.SQLite.Simple.FromRow
 import Database.SQLite.Simple.FromField
 import Crypto.BCrypt
 import qualified Data.ByteString.Char8 as B
+import GHC.Generics
+import Data.Morpheus.Types
 
 data UserField = UserField
-    { userid :: Integer
-    , username :: String
-    , password ::String
-    } deriving (Show)
+    { userid :: Int
+    , username :: T.Text 
+    , password :: T.Text
+    } deriving (Generic, GQLType, Show)
 
 instance FromRow UserField where
   fromRow = UserField <$> field <*> field <*> field
 
 data BookField = BookField     
-    { bookid :: Integer
-    , userID :: Integer
-    , flightNumber :: Integer
-    } deriving (Show)
+    { bookid :: Int
+    , userID :: Int
+    , flightNumber :: Int
+    } deriving (Generic, GQLType, Show)
 
 instance FromRow BookField where
   fromRow = BookField <$> field <*> field <*> field

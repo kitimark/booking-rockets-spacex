@@ -16,20 +16,23 @@ import qualified Data.Map as Map
 import Data.Maybe
 import Web.JWT
 import Control.Monad.IO.Class (liftIO)
+import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Aeson as Aeson
 import Data.Morpheus
 import Data.Morpheus.Document
 import Data.Morpheus.Types
 import GHC.Generics
+import Data.Flight
+import Foreign.Marshal.Unsafe
 
 logindb :: String -> String -> IO T.Text
 logindb user pass = do 
   conn <- open "data.db"
   userData <- liftIO $ queryUserByUsername user :: IO UserField
-  let passwordHash' = (password :: UserField -> String) userData
+  let passwordHash' = (password :: UserField -> Text) userData
   close conn
-  if validatePassword (B.pack passwordHash') (B.pack pass)
+  if validatePassword (B.pack $ T.unpack passwordHash') (B.pack pass)
     -- then print $ decodeAndVerifySignature (hmacSecret "secret-key") (userToken userData)
     then return $ userToken userData
     else error "Unauthorized"
@@ -43,11 +46,11 @@ userToken userData = let
     , alg = Just HS256
     , kid = Nothing }
   payload = Map.fromList 
-    [ ("id",Aeson.Number $ fromInteger $ userid userData)
-    , ("username",Aeson.String $ T.pack $ (username :: UserField -> String) userData)
-    , ("password",Aeson.String $ T.pack $ (password :: UserField -> String) userData) ]
+    -- [ ("id", Aeson.Number $ fromIntegral userid userData)
+    [ ("username",Aeson.String $ (username :: UserField -> Text) userData)
+    , ("password",Aeson.String $ (password :: UserField -> Text) userData) ]
   cs = mempty 
-    { jti = stringOrURI $ T.pack $ (username :: UserField -> String) userData
+    { jti = stringOrURI $ (username :: UserField -> Text) userData
     , unregisteredClaims =  ClaimsMap {unClaimsMap = payload}    
     }
   in encodeSigned key header cs
@@ -65,3 +68,31 @@ resolveUserLogin credential = do
   let user = T.unpack $ (username :: CredentialArgs -> T.Text) credential
   let pass = T.unpack $ (password :: CredentialArgs -> T.Text) credential
   liftIO $ logindb user pass
+
+data User = User
+  { userId :: Int
+  , username :: Text
+  , password :: Text
+  , bookings :: [Flight]
+  } deriving (Generic, GQLType)
+
+resolveGetUsers :: IORes e [User]
+resolveGetUsers = do
+  users <- liftIO $ queryUsers
+  let users' = map reduceUser users
+  return users'
+
+reduceUser :: UserField -> User
+reduceUser UserField{userid, username, password} = User 
+  { userId = userid
+  , username = username
+  , password = password 
+  , bookings = bookings'
+  } where 
+    bookings' = do
+      let bookingField = unsafeLocalState $ queryBookingByUserID userid
+      map reduceFlight bookingField
+
+reduceFlight :: BookField -> Flight
+reduceFlight BookField { flightNumber } = 
+  unsafeLocalState $ getFlight flightNumber 
