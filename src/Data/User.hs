@@ -28,7 +28,7 @@ import Data.Flight
 import Foreign.Marshal.Unsafe
 import Database.Spacex
 
-logindb :: String -> String -> IO T.Text
+logindb :: Text -> String -> IO T.Text
 logindb user pass = do 
   conn <- open "data.db"
   userData <- liftIO $ queryUserByUsername user :: IO UserField
@@ -67,7 +67,7 @@ data CredentialArgs = CredentialArgs
 
 resolveUserLogin :: CredentialArgs -> IOMutRes e T.Text
 resolveUserLogin credential = do
-  let user = T.unpack $ (username :: CredentialArgs -> T.Text) credential
+  let user = (username :: CredentialArgs -> T.Text) credential
   let pass = T.unpack $ (password :: CredentialArgs -> T.Text) credential
   liftIO $ logindb user pass
 
@@ -86,3 +86,14 @@ resolveGetUser GetUserArgs { userId } = do
   user <- liftIO $ queryUserByID userId
   let user' = userResolver user
   return user'
+
+data CreateUserArgs = CreateUserArgs
+  { username :: Text
+  } deriving (Generic)
+
+resolveCreateUser :: CreateUserArgs -> IOMutRes e User
+resolveCreateUser CreateUserArgs {username} = do
+  liftIO $ insertUser username "1234"
+  user' <- liftIO $ queryUserByUsername username
+  let user = userResolver user'
+  return user

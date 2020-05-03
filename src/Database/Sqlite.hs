@@ -50,12 +50,12 @@ dropdb = do
     removeFile "data.db"
     putStrLn "data.db has been removed"
 
-insertUser :: String -> String -> IO()
+insertUser :: T.Text -> T.Text -> IO()
 insertUser name pass = do
     conn <- open "data.db" 
     let inq = "INSERT INTO User ( username, password) VALUES(?, ?);"
-    hash <- liftIO $ hashPasswordUsingPolicy slowerBcryptHashingPolicy (B.pack pass)
-    execute conn inq  ((name, B.unpack $ fromJust hash) :: (String, String))
+    hash <- liftIO $ hashPasswordUsingPolicy slowerBcryptHashingPolicy (B.pack $ T.unpack pass)
+    execute conn inq  ((name, B.unpack $ fromJust hash) :: (T.Text, String))
     id1 <- lastInsertRowId conn
     putStrLn ("user id "++ show (id1) ++" has been added")
     close conn
@@ -104,11 +104,11 @@ queryUserByID uid = do
     close conn 
     return r
 
-queryUserByUsername :: String -> IO UserField
+queryUserByUsername :: T.Text -> IO UserField
 queryUserByUsername name = do 
     conn <- open "data.db" 
     let sql_code = "select * from User where username = :qid" 
-    [r] <- queryNamed conn sql_code [":qid" := (name :: String)]:: IO [UserField]
+    [r] <- queryNamed conn sql_code [":qid" := (name :: T.Text)]:: IO [UserField]
     close conn 
     return r
 

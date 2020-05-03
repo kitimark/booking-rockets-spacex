@@ -34,6 +34,7 @@ data Query m = Query
 
 data Mutation m = Mutation
   { loginUser :: CredentialArgs -> m Text 
+  , createUser :: CreateUserArgs -> m User
   } deriving (Generic, GQLType)
 
 rootResolver :: GQLRootResolver IO () Query Mutation Undefined
@@ -47,7 +48,8 @@ rootResolver =
       , getUsers = resolveGetUsers 
       , getUser = resolveGetUser }
     , mutationResolver = Mutation 
-      { loginUser = resolveUserLogin }
+      { loginUser = resolveUserLogin 
+      , createUser = resolveCreateUser }
     , subscriptionResolver = undefined }
   where
     hello = pure "Hello world"
