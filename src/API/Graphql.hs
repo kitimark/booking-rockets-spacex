@@ -33,8 +33,7 @@ data Query m = Query
   } deriving (Generic, GQLType)
 
 data Mutation m = Mutation
-  { loginUser :: CredentialArgs -> m Text 
-  , createUser :: CreateUserArgs -> m User
+  { createUser :: CreateUserArgs -> m User
   , createBooking :: CreateBookingArgs -> m User
   } deriving (Generic, GQLType)
 
@@ -49,8 +48,7 @@ rootResolver =
       , getUsers = resolveGetUsers 
       , getUser = resolveGetUser }
     , mutationResolver = Mutation 
-      { loginUser = resolveUserLogin 
-      , createUser = resolveCreateUser 
+      { createUser = resolveCreateUser 
       , createBooking = resolveCreateBooking }
     , subscriptionResolver = undefined }
   where
