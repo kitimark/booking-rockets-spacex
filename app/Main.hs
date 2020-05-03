@@ -1,6 +1,9 @@
 module Main where
 
 import Server.Scotty
+import Database.Sqlite
 
 main :: IO ()
-main = api
+main = do 
+  initdb
+  api
