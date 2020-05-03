@@ -80,6 +80,7 @@ initdb = do
                         \id INTEGER NOT NULL PRIMARY KEY,\
                         \userID INTEGER not null,\
                         \flightNumber INTEGER not null,\
+                        \UNIQUE (userID, flightNumber),\
                         \FOREIGN KEY (userID) REFERENCES User (id) ON DELETE CASCADE);"
     execute_ conn code_user
     execute conn code_booking ()
